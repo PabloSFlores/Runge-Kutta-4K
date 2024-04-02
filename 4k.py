@@ -1,3 +1,5 @@
+# +-----------------------------+
+# Imports
 import math
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -5,89 +7,105 @@ import tkinter as tk
 from tkinter import scrolledtext
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# +-----------------------------+
 # Constants
-T_0 = 0
+X_0 = 1
 Y_0 = 1
 
 # Final point
-T_FINAL = 5
+X_FINAL = 5
 
 # Steps
-DT = 0.5
-DT_EXACT = 0.01
+H = 0.5
+H_HR= 0.01
 
-
+# +-----------------------------+
 # Functions
-def f(t, y):
-    return math.sin(t)**2 * y
+def f(x, y):
+    return math.sin(x)**2 * y
 
-def euler_step(t_i, y_i, dt, f):
-    return y_i + dt*f(t_i, y_i)
+def euler_step(x_i, y_i, h, f):
+    return y_i + h*f(x_i, y_i)
 
-def rk4_step(t_i, y_i, dt, f):
-    k1 = f(t_i, y_i)
-    k2 = f(t_i + dt/2, y_i + k1*dt/2)
-    k3 = f(t_i + dt/2, y_i + k2*dt/2)
-    k4 = f(t_i + dt, y_i + k3*dt)
-    return y_i + dt/6*(k1 + 2*k2 + 2*k3 + k4)
+def rk4_step(x_i, y_i, h, f):
+    k1 = f(x_i, y_i)
+    k2 = f(x_i + h/2, y_i + k1*h/2)
+    k3 = f(x_i + h/2, y_i + k2*h/2)
+    k4 = f(x_i + h, y_i + k3*h)
+    return y_i + h/6*(k1 + 2*k2 + 2*k3 + k4)
 
-def exact_solution(t_0, y_0, t):
-    exp_arg = 1/2 * ( (t-t_0) - (math.sin(t)*math.cos(t) - math.sin(t_0)*math.cos(t_0)) )
+def exact_solution(x_0, y_0, x):
+    exp_arg = 1/2 * ( (x-x_0) - (math.sin(x)*math.cos(x) - math.sin(x_0)*math.cos(x_0)) )
     return y_0*math.exp(exp_arg)
 
-
+# +-----------------------------+
 # Computing high resolution exact result
-t = T_0
+x = X_0
 
-ys_exact_hr = []
-ts_exact_hr = []
+xs_exact_hr = [X_0]
+ys_exact_hr = [Y_0]
 
-while t < T_FINAL:
-    ys_exact_hr.append(exact_solution(T_0, Y_0, t))
-    ts_exact_hr.append(t)
-    t += DT_EXACT
+while x < X_FINAL:
+    x += H_HR
+    xs_exact_hr.append(x)
+    ys_exact_hr.append(exact_solution(X_0, Y_0, x))
 
+# +-----------------------------+
 # Computing exact results
-t = T_0
+x = X_0
 
-ts_exact_p = [T_0]
 ys_exact_p = [Y_0]
 
-while t < T_FINAL:
-    t += DT
-    ts_exact_p.append(t)
-    ys_exact_p.append(exact_solution(T_0, Y_0, t))
+while x < X_FINAL:
+    x += H
+    ys_exact_p.append(exact_solution(X_0, Y_0, x))
 
+# +-----------------------------+
+# Computing approximate results with Euler
+x = X_0
 
-# Computing approximate results
-ts = [T_0]
-ys_rk4 = [Y_0]
 ys_euler = [Y_0]
-
-t = T_0
-y_rk4 = Y_0
 y_euler = Y_0
 
-while t < T_FINAL:
-    # Solving with Runge-Kutta
-    y_rk4 = rk4_step(t, y_rk4, DT, f)
-
-    # Solving with Euler
-    y_euler = euler_step(t, y_euler, DT, f)
-
-    # Increasing t
-    t += DT
-
-    # Appending results
-    ts.append(t)
-    ys_rk4.append(y_rk4)
+while x < X_FINAL:
+    y_euler = euler_step(x, y_euler, H, f)
     ys_euler.append(y_euler)
+    x += H
 
+# +-----------------------------+
+# Computing approximate results with Runge-Kutta
+x = X_0
+
+ys_rk4 = [Y_0]
+y_rk4 = Y_0
+
+while x < X_FINAL:
+    y_rk4 = rk4_step(x, y_rk4, H, f)
+    ys_rk4.append(y_rk4)
+    x += H
+
+# +-----------------------------+
+# Computing errors
+x = X_0
+
+
+
+# +-----------------------------+
+# Computing x values
+x = X_0
+
+xs = [X_0]
+
+while x < X_FINAL:
+    x += H
+    xs.append(x)
+
+# +-----------------------------+
 # Info table
-data = {'Time': ts,
-        'Exact Solution': ys_exact_p,
-        'RK4 Solution': ys_rk4,
-        'Euler Solution': ys_euler}
+data = {'x': xs,
+        'y(Exact)': ys_exact_p,
+        'y(RK4)': ys_rk4,
+        'y(Euler)': ys_euler}
 
 df = pd.DataFrame(data)
 
@@ -105,10 +123,10 @@ txt_area.pack(expand=True, fill=tk.BOTH)
 
 # Plotting
 fig, graphic = plt.subplots(figsize=(6, 4))
-graphic.plot(ts, ys_rk4, color='red', marker='o', linewidth=0.0, label='RK4')
-graphic.plot(ts, ys_euler, color='green', marker='o', linewidth=0.0, label='Euler')
-graphic.plot(ts_exact_p, ys_exact_p, color='black', marker='x', linewidth=0.0, label='Exact')
-graphic.plot(ts_exact_hr, ys_exact_hr, color='blue', label='Exact')
+graphic.plot(xs, ys_rk4, color='red', marker='o', linewidth=0.0, label='RK4')
+graphic.plot(xs, ys_euler, color='green', marker='o', linewidth=0.0, label='Euler')
+graphic.plot(xs, ys_exact_p, color='black', marker='x', linewidth=0.0, label='Exact')
+graphic.plot(xs_exact_hr, ys_exact_hr, color='blue', label='Exact')
 graphic.legend()
 
 # Show the graphic individualy
