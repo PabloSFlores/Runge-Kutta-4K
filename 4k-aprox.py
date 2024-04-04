@@ -9,20 +9,20 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # +-----------------------------+
 # Constants
-X_0 = 0
-Y_0 = -3
+X_0 = -5
+Y_0 = 0.01
 
 # Steps
-H = 1
+H = 0.1
 H_HR= 0.01
 
 # Number of iterations
-N = 5
+N = 200
 
 # +-----------------------------+
 # Functions
 def f(x, y):
-    return x + y / 5
+    return math.exp(-x**2)
 
 def euler_step(x_i, y_i, h, f):
     return y_i + h*f(x_i, y_i)
@@ -86,6 +86,7 @@ data_rk = {'x': xs,
 data_euler = {'x': xs,
         'y(Euler)': ys_euler}
 
+pd.set_option('display.max_rows', None)
 df_rk = pd.DataFrame(data_rk)
 df_euler = pd.DataFrame(data_euler)
 
