@@ -9,15 +9,15 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # +-----------------------------+
 # Constants
-X_0 = -5
-Y_0 = 0.01
+X_0 = -2
+Y_0 = 0.117918609
 
 # Steps
 H = 0.1
 H_HR= 0.01
 
 # Number of iterations
-N = 200
+N = 40
 
 # +-----------------------------+
 # Functions
@@ -66,19 +66,15 @@ xs = [X_0]
 
 for i in range(N):
     x += H
-    xs.append(x)
+    xs.append(round(x, 5))
 
 # +-----------------------------+
-# print(len(xs))
-# print(len(ys_exact_p))
-# print(len(ys_rk4))
-# print(len(ys_euler))
-# print(len(rk_abs_errs))
-# print(len(rk_rel_errs))
-# print(len(rk_rel_errs_p))
-# print(len(euler_abs_errs))
-# print(len(euler_rel_errs))
-# print(len(euler_rel_errs_p))
+# Rounding values
+xs = [round(value, 5) for value in xs]
+ys_rk4 = [round(value, 5) for value in ys_rk4]
+ys_euler = [round(value, 5) for value in ys_euler]
+
+# +-----------------------------+
 # Info tables
 data_rk = {'x': xs,
         'y(RK4)': ys_rk4}

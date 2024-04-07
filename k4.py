@@ -10,10 +10,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 # +-----------------------------+
 # Constants
 X_0 = 0
-Y_0 = 2
+Y_0 = 1
 
 # Steps
-H = 0.2
+H = 0.1
 H_HR= 0.01
 
 # Number of iterations
@@ -22,7 +22,7 @@ N = 5
 # +-----------------------------+
 # Functions
 def f(x, y):
-    return x - y
+    return 2 * x * y
 
 def euler_step(x_i, y_i, h, f):
     return y_i + h*f(x_i, y_i)
@@ -35,7 +35,7 @@ def rk4_step(x_i, y_i, h, f):
     return y_i + h/6*(k1 + 2*k2 + 2*k3 + k4)
 
 def exact_solution(x):
-    return x - 1 + 3 / math.exp(x)
+    return math.exp(x ** 2)
 
 # +-----------------------------+
 # Computing high resolution exact result
@@ -125,16 +125,19 @@ for i in range(N):
     xs.append(x)
 
 # +-----------------------------+
-# print(len(xs))
-# print(len(ys_exact_p))
-# print(len(ys_rk4))
-# print(len(ys_euler))
-# print(len(rk_abs_errs))
-# print(len(rk_rel_errs))
-# print(len(rk_rel_errs_p))
-# print(len(euler_abs_errs))
-# print(len(euler_rel_errs))
-# print(len(euler_rel_errs_p))
+# Rounding values
+xs = [round(value, 5) for value in xs]
+ys_exact_p = [round(value, 5) for value in ys_exact_p]
+ys_rk4 = [round(value, 5) for value in ys_rk4]
+# rk_abs_errs = [round(value, 5) for value in rk_abs_errs]
+# rk_rel_errs = [round(value, 5) for value in rk_rel_errs]
+# rk_rel_errs_p = [round(value, 5) for value in rk_rel_errs_p]
+ys_euler = [round(value, 5) for value in ys_euler]
+# euler_abs_errs = [round(value, 5) for value in euler_abs_errs]
+# euler_rel_errs = [round(value, 5) for value in euler_rel_errs]
+# euler_rel_errs_p = [round(value, 5) for value in euler_rel_errs_p]
+
+# +-----------------------------+
 # Info tables
 data_rk = {'x': xs,
         'y(Exacta)': ys_exact_p,
