@@ -22,7 +22,7 @@ N = 5
 # +-----------------------------+
 # Functions
 def f(x, y):
-    return 2 * x * y
+    return 6 * x ** 2 - 3 * x ** 2 * y
 
 def euler_step(x_i, y_i, h, f):
     return y_i + h*f(x_i, y_i)
@@ -35,7 +35,7 @@ def rk4_step(x_i, y_i, h, f):
     return y_i + h/6*(k1 + 2*k2 + 2*k3 + k4)
 
 def exact_solution(x):
-    return math.exp(x ** 2)
+    return 2 - 1 / math.exp(x ** 3)
 
 # +-----------------------------+
 # Computing high resolution exact result
@@ -126,13 +126,13 @@ for i in range(N):
 
 # +-----------------------------+
 # Rounding values
-xs = [round(value, 5) for value in xs]
-ys_exact_p = [round(value, 5) for value in ys_exact_p]
-ys_rk4 = [round(value, 5) for value in ys_rk4]
+# xs = [round(value, 5) for value in xs]
+# ys_exact_p = [round(value, 5) for value in ys_exact_p]
+# ys_rk4 = [round(value, 5) for value in ys_rk4]
 # rk_abs_errs = [round(value, 5) for value in rk_abs_errs]
 # rk_rel_errs = [round(value, 5) for value in rk_rel_errs]
 # rk_rel_errs_p = [round(value, 5) for value in rk_rel_errs_p]
-ys_euler = [round(value, 5) for value in ys_euler]
+# ys_euler = [round(value, 5) for value in ys_euler]
 # euler_abs_errs = [round(value, 5) for value in euler_abs_errs]
 # euler_rel_errs = [round(value, 5) for value in euler_rel_errs]
 # euler_rel_errs_p = [round(value, 5) for value in euler_rel_errs_p]
